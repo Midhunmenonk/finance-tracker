@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useCurrencyConverter } from '../hooks/useCurrencyConverter';
 import AddBudgetForm from '../components/budgets/AddBudgetForm';
-import { FiPlus, FiHome, FiShoppingCart, FiFilm, FiTruck } from 'react-icons/fi';
+import { FiPlus, FiHome, FiShoppingCart, FiFilm, FiTruck } from 'react-icons/fi'; // ✅ Ensure this line is here
 
 const categoryIcons = {
   Food: <FiShoppingCart />,
@@ -20,78 +20,125 @@ const BudgetPage = () => {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const today = new Date();
+  const totalDaysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const daysRemaining = totalDaysInMonth - today.getDate();
+
   return (
     <div className="p-4 md:p-8 bg-gray-100 min-h-screen">
       <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Monthly Budget Goals</h1>
       
-      {/* This is the section that displays the list of goals */}
       <div className="mt-8 space-y-4 max-w-4xl mx-auto">
         {isLoading ? (
           <p className="text-center text-gray-500">Loading currency rates...</p>
         ) : (
-          // ✅ THIS LOGIC WAS MISSING AND HAS BEEN ADDED BACK
           goals.map(goal => {
             const spending = transactions
               .filter(t => t.type === 'expense' && t.category === goal.category)
               .reduce((sum, t) => sum + convertAmount(t.amount, t.currency), 0);
             
+            const remaining = goal.goal - spending;
             const progress = goal.goal > 0 ? (spending / goal.goal) * 100 : 0;
-            const progressBarWidth = Math.min(progress, 100);
-            const isOverBudget = progress > 100;
-
+            const dailyAverage = remaining > 0 && daysRemaining > 0 ? remaining / daysRemaining : 0;
+            
+            let status = { text: 'On Track', color: 'bg-green-100 text-green-800' };
             let progressBarColor = 'bg-green-500';
-            if (progress > 75) progressBarColor = 'bg-yellow-500';
-            if (isOverBudget) progressBarColor = 'bg-red-500';
+
+            if (progress >= 75 && progress <= 100) {
+              status = { text: 'Nearing Limit', color: 'bg-yellow-100 text-yellow-800' };
+              progressBarColor = 'bg-yellow-500';
+            } else if (progress > 100) {
+              status = { text: 'Exceeded', color: 'bg-red-100 text-red-800' };
+              progressBarColor = 'bg-red-500';
+            }
 
             return (
-              <div key={goal.category} className="bg-white p-4 rounded-lg shadow-md">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center space-x-4 self-start sm:self-center">
+              <div key={goal.category} className="bg-white p-6 rounded-lg shadow-md space-y-4">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-4">
                     <div className="text-2xl text-gray-500 p-2 bg-gray-100 rounded-lg">
                       {categoryIcons[goal.category] || categoryIcons.Default}
                     </div>
-                    <span className="font-bold text-lg">{goal.category}</span>
+                    <span className="font-bold text-lg text-gray-800">{goal.category}</span>
                   </div>
-                  <div className="w-full sm:w-1/2">
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>{spending.toLocaleString('en-US', { style: 'currency', currency: baseCurrency })}</span>
-                      <span className="font-semibold">Goal: {goal.goal.toLocaleString('en-US', { style: 'currency', currency: baseCurrency })}</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                      <div className={`${progressBarColor} h-2.5 rounded-full`} style={{ width: `${progressBarWidth}%` }}></div>
-                    </div>
-                    {isOverBudget && <p className="text-xs text-red-600 text-right mt-1">You are over budget!</p>}
+                  <span className={`px-3 py-1 text-xs font-semibold rounded-full ${status.color}`}>
+                    {status.text}
+                  </span>
+                </div>
+                <div>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div className={`${progressBarColor} h-2.5 rounded-full`} style={{ width: `${Math.min(progress, 100)}%` }}></div>
                   </div>
+                  <div className="flex justify-between text-sm text-gray-600 mt-2">
+                    <span>Spent: {spending.toLocaleString('en-US', { style: 'currency', currency: baseCurrency })}</span>
+                    <span className="font-semibold">Goal: {goal.goal.toLocaleString('en-US', { style: 'currency', currency: baseCurrency })}</span>
+                  </div>
+                </div>
+                <div className="border-t pt-4 flex justify-around text-center">
+                  {remaining >= 0 ? (
+                    <>
+                      <div>
+                        <p className="text-sm text-gray-500">Remaining</p>
+                        <p className="font-bold text-green-600">{remaining.toLocaleString('en-US', { style: 'currency', currency: baseCurrency })}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Daily Average</p>
+                        <p className="font-bold text-gray-700">{dailyAverage.toLocaleString('en-US', { style: 'currency', currency: baseCurrency })}/day</p>
+                      </div>
+                    </>
+                  ) : (
+                    <div>
+                      <p className="text-sm text-gray-500">Overspent By</p>
+                      <p className="font-bold text-red-600">{Math.abs(remaining).toLocaleString('en-US', { style: 'currency', currency: baseCurrency })}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             );
           })
         )}
       </div>
-
-      {/* Floating Action Button */}
+      
+      {/* --- Floating Button and Modal (no changes) --- */}
       <button 
-        onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-8 right-8 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-transform duration-200 hover:scale-110"
-        aria-label="Add new budget goal"
-      >
-        <FiPlus size={24} />
+      onClick={() => setIsModalOpen(true)}
+      className="fixed bottom-8 right-8 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-transform duration-200 hover:scale-110"
+      aria-label="Add new budget goal"
+     >
+
+      <FiPlus size={24} />
+
       </button>
 
-      {/* Modal */}
+
+
+   {/* Modal */}
+
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-2xl w-full max-w-md">
-            <div className="p-4 border-b flex justify-between items-center">
-              <h2 className="text-xl font-bold">Set Budget Goal</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
-            </div>
-            <div className="p-6">
-              <AddBudgetForm onClose={() => setIsModalOpen(false)} />
-            </div>
-          </div>
-        </div>
-      )}
+
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+
+     <div className="bg-white rounded-lg shadow-2xl w-full max-w-md">
+
+      <div className="p-4 border-b flex justify-between items-center">
+
+       <h2 className="text-xl font-bold">Set Budget Goal</h2>
+
+       <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+
+      </div>
+
+      <div className="p-6">
+
+       <AddBudgetForm onClose={() => setIsModalOpen(false)} />
+
+      </div>
+
+     </div>
+
+    </div>
+   )}
+
     </div>
   );
 };

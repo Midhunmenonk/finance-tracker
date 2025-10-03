@@ -3,7 +3,8 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteTransaction } from '../../features/transactions/transactionsSlice';
 import { useCurrencyConverter } from '../../hooks/useCurrencyConverter';
-import { FiEdit2, FiTrash2, FiArrowUp, FiArrowDown } from 'react-icons/fi';
+// 1. FiEdit2 icon removed from imports
+import { FiTrash2, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 
 const RecentTransactionsList = () => {
   const dispatch = useDispatch();
@@ -25,7 +26,6 @@ const RecentTransactionsList = () => {
         {recentTransactions.map((t) => {
           const isIncome = t.type === 'income';
           const convertedValue = convertAmount(t.amount, t.currency);
-          // Use the transaction's currency if it exists, otherwise fall back to the base currency.
           const displayCurrency = t.currency || baseCurrency; 
           const showConverted = displayCurrency !== baseCurrency;
 
@@ -48,12 +48,13 @@ const RecentTransactionsList = () => {
                 <span className={`font-semibold ${isIncome ? 'text-green-600' : 'text-red-500'}`}>
                   {isIncome ? '+' : '-'}{t.amount.toLocaleString('en-US', { 
                     style: 'currency', 
-                    currency: displayCurrency // ✅ This is the fix
+                    currency: displayCurrency
                   })}
                 </span>
-                <div className="flex items-center space-x-2 text-gray-400">
-                  <button className="hover:text-blue-500"><FiEdit2 /></button>
-                  <button onClick={() => handleDelete(t.id)} className="hover:text-red-500"><FiTrash2 /></button>
+                <div className="flex items-center text-gray-400">
+                  <button onClick={() => handleDelete(t.id)} className="hover:text-red-500 p-2">
+                    <FiTrash2 />
+                  </button>
                 </div>
               </div>
             </div>

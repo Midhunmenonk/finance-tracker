@@ -1,18 +1,35 @@
 // src/components/dashboard/AddTransactionForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { addTransaction } from '../../features/transactions/transactionsSlice';
+import { addTransaction, updateTransaction } from '../../features/transactions/transactionsSlice';
 // Assuming you have a list of categories
 const categories = ['Food', 'Housing', 'Entertainment', 'Transportation', 'Salary', 'Utilities', 'Other'];
 const currencies = ['USD', 'EUR', 'GBP', 'INR']; // Example currencies
 
-const AddTransactionForm = () => {
+const AddTransactionForm = ({ initialData = null, closeModal, onSubmit }) => {
   const dispatch = useDispatch();
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [type, setType] = useState('expense'); // Default to expense
   const [category, setCategory] = useState('');
   const [currency, setCurrency] = useState('USD'); // Default currency
+
+  // Populate form if editing
+  useEffect(() => {
+    if (initialData) {
+      setDescription(initialData.description || '');
+      setAmount(initialData.amount || '');
+      setType(initialData.type || 'expense');
+      setCategory(initialData.category || '');
+      setCurrency(initialData.currency || 'USD');
+    } else {
+      setDescription('');
+      setAmount('');
+      setType('expense');
+      setCategory('');
+      setCurrency('USD');
+    }
+  }, [initialData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,26 +38,39 @@ const AddTransactionForm = () => {
       return;
     }
 
-    const newTransaction = {
+    const transactionData = {
       description,
       amount: parseFloat(amount),
       type,
       category,
       currency,
-      date: new Date().toISOString().split('T')[0], // Current date
+      date: initialData?.date || new Date().toISOString().split('T')[0], // Use existing date if editing
+      id: initialData?.id, // For update
     };
 
-    dispatch(addTransaction(newTransaction));
-    // Clear form
+    if (initialData) {
+      // Edit mode
+      dispatch(updateTransaction(transactionData));
+      if (onSubmit) onSubmit(transactionData);
+    } else {
+      // Add mode
+      dispatch(addTransaction(transactionData));
+      if (onSubmit) onSubmit(transactionData);
+    }
+
+    // Clear form and close modal if provided
     setDescription('');
     setAmount('');
     setCategory('');
     setCurrency('USD');
+    if (closeModal) closeModal();
   };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="font-bold text-lg mb-4 text-gray-800">Add New Transaction</h3>
+      <h3 className="font-bold text-lg mb-4 text-gray-800">
+        {initialData ? 'Edit Transaction' : 'Add New Transaction'}
+      </h3>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Description */}
         <div>
@@ -132,13 +162,13 @@ const AddTransactionForm = () => {
           </select>
         </div>
 
-        {/* Add Transaction Button */}
+        {/* Submit Button */}
         <div className="md:col-span-2">
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Add Transaction
+            {initialData ? 'Update Transaction' : 'Add Transaction'}
           </button>
         </div>
       </form>

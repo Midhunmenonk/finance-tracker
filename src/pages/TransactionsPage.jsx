@@ -1,7 +1,7 @@
 // src/pages/TransactionsPage.jsx
 import React, { useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteTransaction } from '../features/transactions/transactionsSlice';
+import { deleteTransaction, updateTransaction } from '../features/transactions/transactionsSlice'; // <-- Import update action
 import { useCurrencyConverter } from '../hooks/useCurrencyConverter'; // 1. Import the hook
 import { FiPlus, FiEdit2, FiTrash2, FiTrendingUp, FiTrendingDown } from 'react-icons/fi';
 import AddTransactionForm from '../components/dashboard/AddTransactionForm';
@@ -15,6 +15,7 @@ const TransactionsPage = () => {
   const [filterType, setFilterType] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState(null);
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter(t => {
@@ -35,8 +36,32 @@ const TransactionsPage = () => {
 
   const [modalContent, setModalContent] = useState(null);
 
+  const openEditModal = (transaction) => {
+    setEditingTransaction(transaction);
+    setModalContent(
+      <AddTransactionForm
+        initialData={transaction}
+        closeModal={closeModal}
+        onSubmit={handleEditSubmit}
+      />
+    );
+    setIsModalOpen(true);
+  };
+
+  const handleEditSubmit = (updatedData) => {
+    dispatch(updateTransaction({ ...editingTransaction, ...updatedData }));
+    closeModal();
+    setEditingTransaction(null);
+  };
+
   const openAddModal = () => {
-    setModalContent(<AddTransactionForm closeModal={() => setModalContent(null)} />);
+    setEditingTransaction(null);
+    setModalContent(
+      <AddTransactionForm
+        closeModal={closeModal}
+        onSubmit={null}
+      />
+    );
     setIsModalOpen(true);
   };
   
@@ -113,7 +138,7 @@ const TransactionsPage = () => {
                   {t.category}
                 </span>
                 <div>
-                  <button className="text-gray-400 hover:text-indigo-600 p-2"><FiEdit2 /></button>
+                  <button className="text-gray-400 hover:text-indigo-600 p-2" onClick={() => openEditModal(t)}><FiEdit2 /></button>
                   <button onClick={() => handleDelete(t.id)} className="text-gray-400 hover:text-red-600 p-2"><FiTrash2 /></button>
                 </div>
               </div>
@@ -169,7 +194,7 @@ const TransactionsPage = () => {
                   </td>
                   <td className="p-4 text-gray-600">{new Date(t.date).toLocaleDateString()}</td>
                   <td className="p-4 text-right">
-                    <button className="text-gray-400 hover:text-indigo-600 p-2"><FiEdit2 /></button>
+                    <button className="text-gray-400 hover:text-indigo-600 p-2" onClick={() => openEditModal(t)}><FiEdit2 /></button>
                     <button onClick={() => handleDelete(t.id)} className="text-gray-400 hover:text-red-600 p-2"><FiTrash2 /></button>
                   </td>
                 </tr>
@@ -191,7 +216,7 @@ const TransactionsPage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-2xl w-full max-w-lg">
             <div className="p-4 border-b flex justify-between items-center">
-              <h2 className="text-xl font-bold">Add a New Transaction</h2>
+              <h2 className="text-xl font-bold">{editingTransaction ? 'Edit Transaction' : 'Add a New Transaction'}</h2>
               <button onClick={closeModal} className="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
             </div>
             <div className="p-6">

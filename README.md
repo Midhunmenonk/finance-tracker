@@ -1,16 +1,45 @@
 # React + Vite
+FinanceTrack - Personal Finance Tracker
+FinanceTrack is a modern, responsive personal finance application built with React.js. It allows users to track their income and expenses, set monthly budget goals, and gain insights into their spending habits, all with real-time currency conversion.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+✨ Features
+Dashboard Overview: A comprehensive summary of your total income, expenses, and current balance.
+Transaction Management: Easily add, edit, and delete income or expense transactions.
+Budgeting: Set, manage, and track your progress against monthly budget goals for different categories.
+Real-time Currency Conversion: Input transactions in various currencies (USD, EUR, INR, etc.) and see all totals displayed in your preferred base currency using the latest exchange rates.
+Data Visualization: Interactive charts provide a clear breakdown of your spending habits.
+Spending Insights: Get dynamic feedback and suggestions based on your financial patterns.
+Fully Responsive: A clean and intuitive UI that works seamlessly across desktops, tablets, and mobile devices.
 
-Currently, two official plugins are available:
+🛠️ Tech Stack
+Frontend: React.js (with Vite)
+State Management: Redux Toolkit (including RTK Query for API calls)
+Styling: Tailwind CSS
+Routing: React Router
+Charts: Recharts
+Icons: React Icons
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+📋 Prerequisites
+Node.js (v18.x or later recommended)
+npm 
 
-## React Compiler
+To run this project:-
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Clone the Repository
+   git clone https://github.com/your-username/finance-tracker.git
+   cd finance-tracker
 
-## Expanding the ESLint configuration
+2. Install Dependencies
+   npm install
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+3. Set Up Environment Variables
+   -This project requires an API key from ExchangeRate-API for currency conversion.
+   -Sign up for a free API key at www.exchangerate-api.com.
+   -Create a new file named .env in the root of your project.
+   -Add your API key to the .env file like this:
+   -VITE_EXCHANGE_RATE_API_KEY=your_api_key_here
+
+4. Run the Development Server
+   npm run dev
+
+

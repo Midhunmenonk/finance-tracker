@@ -1,9 +1,9 @@
-// src/pages/BudgetPage.jsx
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useCurrencyConverter } from '../hooks/useCurrencyConverter';
 import AddBudgetForm from '../components/budgets/AddBudgetForm';
-import { FiPlus, FiHome, FiShoppingCart, FiFilm, FiTruck } from 'react-icons/fi'; // ✅ Ensure this line is here
+import { deleteBudgetGoal } from '../features/budgets/budgetSlice';
+import { FiPlus, FiHome, FiShoppingCart, FiFilm, FiTruck, FiTrash2 } from 'react-icons/fi';
 
 const categoryIcons = {
   Food: <FiShoppingCart />,
@@ -14,6 +14,7 @@ const categoryIcons = {
 };
 
 const BudgetPage = () => {
+  const dispatch = useDispatch();
   const { goals } = useSelector(state => state.budgets);
   const { items: transactions = [] } = useSelector(state => state.transactions) || {};
   const { baseCurrency, convertAmount, isLoading } = useCurrencyConverter();
@@ -23,6 +24,12 @@ const BudgetPage = () => {
   const today = new Date();
   const totalDaysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
   const daysRemaining = totalDaysInMonth - today.getDate();
+
+  const handleDelete = (category) => {
+    if (window.confirm(`Are you sure you want to delete the budget for "${category}"?`)) {
+      dispatch(deleteBudgetGoal(category));
+    }
+  };
 
   return (
     <div className="p-4 md:p-8 bg-gray-100 min-h-screen">
@@ -61,10 +68,20 @@ const BudgetPage = () => {
                     </div>
                     <span className="font-bold text-lg text-gray-800">{goal.category}</span>
                   </div>
-                  <span className={`px-3 py-1 text-xs font-semibold rounded-full ${status.color}`}>
-                    {status.text}
-                  </span>
+                  <div className="flex items-center space-x-2">
+                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${status.color}`}>
+                      {status.text}
+                    </span>
+                    <button
+                      onClick={() => handleDelete(goal.category)}
+                      className="text-gray-400 hover:text-red-600 p-1 rounded-full"
+                      aria-label={`Delete ${goal.category} budget`}
+                    >
+                      <FiTrash2 size={18} />
+                    </button>
+                  </div>
                 </div>
+
                 <div>
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div className={`${progressBarColor} h-2.5 rounded-full`} style={{ width: `${Math.min(progress, 100)}%` }}></div>
@@ -74,6 +91,7 @@ const BudgetPage = () => {
                     <span className="font-semibold">Goal: {goal.goal.toLocaleString('en-US', { style: 'currency', currency: baseCurrency })}</span>
                   </div>
                 </div>
+
                 <div className="border-t pt-4 flex justify-around text-center">
                   {remaining >= 0 ? (
                     <>
@@ -98,47 +116,28 @@ const BudgetPage = () => {
           })
         )}
       </div>
-      
-      {/* --- Floating Button and Modal (no changes) --- */}
+
       <button 
-      onClick={() => setIsModalOpen(true)}
-      className="fixed bottom-8 right-8 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-transform duration-200 hover:scale-110"
-      aria-label="Add new budget goal"
-     >
-
-      <FiPlus size={24} />
-
+        onClick={() => setIsModalOpen(true)}
+        className="fixed bottom-8 right-8 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-transform duration-200 hover:scale-110"
+        aria-label="Add new budget goal"
+      >
+        <FiPlus size={24} />
       </button>
 
-
-
-   {/* Modal */}
-
       {isModalOpen && (
-
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-
-     <div className="bg-white rounded-lg shadow-2xl w-full max-w-md">
-
-      <div className="p-4 border-b flex justify-between items-center">
-
-       <h2 className="text-xl font-bold">Set Budget Goal</h2>
-
-       <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
-
-      </div>
-
-      <div className="p-6">
-
-       <AddBudgetForm onClose={() => setIsModalOpen(false)} />
-
-      </div>
-
-     </div>
-
-    </div>
-   )}
-
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-2xl w-full max-w-md">
+            <div className="p-4 border-b flex justify-between items-center">
+              <h2 className="text-xl font-bold">Set Budget Goal</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            </div>
+            <div className="p-6">
+              <AddBudgetForm onClose={() => setIsModalOpen(false)} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

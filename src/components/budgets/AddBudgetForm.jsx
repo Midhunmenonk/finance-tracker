@@ -1,28 +1,16 @@
 // src/components/budgets/AddBudgetForm.jsx
-import React, { useState, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { setBudgetGoal } from '../../features/budgets/budgetSlice';
+
+// ✅ Define a master list of potential expense categories
+const expenseCategories = ['Food', 'Housing', 'Entertainment', 'Transportation', 'Utilities', 'Other'];
 
 const AddBudgetForm = ({ onClose }) => {
   const dispatch = useDispatch();
-  // Get both transactions and existing goals from Redux
-  const allTransactions = useSelector(state => state.transactions.items);
-  const existingGoals = useSelector(state => state.budgets.goals);
   
   const [category, setCategory] = useState('');
   const [goalAmount, setGoalAmount] = useState('');
-
-  // ✅ NEW LOGIC: Combine categories from goals and expenses for a full list
-  const allCategories = useMemo(() => {
-    const categoriesFromExpenses = allTransactions
-      .filter(t => t.type === 'expense')
-      .map(t => t.category);
-    
-    const categoriesFromGoals = existingGoals.map(g => g.category);
-    
-    // Use a Set to get a unique list of all possible categories
-    return [...new Set([...categoriesFromExpenses, ...categoriesFromGoals])];
-  }, [allTransactions, existingGoals]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,7 +19,7 @@ const AddBudgetForm = ({ onClose }) => {
       return;
     }
     dispatch(setBudgetGoal({ category, goal: parseFloat(goalAmount) }));
-    onClose();
+    onClose(); // Close the modal after submitting
   };
 
   return (
@@ -48,7 +36,8 @@ const AddBudgetForm = ({ onClose }) => {
           required
         >
           <option value="">Select a category</option>
-          {allCategories.map(cat => (
+          {/* The dropdown now uses the predefined list */}
+          {expenseCategories.map(cat => (
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>

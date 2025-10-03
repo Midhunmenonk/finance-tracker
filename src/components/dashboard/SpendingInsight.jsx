@@ -1,4 +1,3 @@
-// src/components/dashboard/SpendingInsight.jsx
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { FiAlertCircle } from 'react-icons/fi';
@@ -14,7 +13,6 @@ const SpendingInsight = () => {
       return { title: "Looking Good!", message: "No expenses recorded yet. Keep up the great work!" };
     }
 
-    // Find the category with the highest spending
     const spendingByCategory = expenses.reduce((acc, t) => {
       acc[t.category] = (acc[t.category] || 0) + t.amount;
       return acc;
@@ -31,7 +29,6 @@ const SpendingInsight = () => {
 
     const percentage = ((highestAmount / totalExpenses) * 100).toFixed(0);
 
-    // Rule: If the top category is more than 40% of all spending
     if (percentage > 40) {
       return {
         title: "Spending Insight!",

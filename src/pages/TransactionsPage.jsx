@@ -1,4 +1,3 @@
-// src/pages/TransactionsPage.jsx
 import React, { useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteTransaction, updateTransaction } from '../features/transactions/transactionsSlice'; // <-- Import update action
@@ -75,7 +74,7 @@ const TransactionsPage = () => {
       <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Detailed Transactions</h1>
       <p className="text-gray-500 mb-6 md:mb-8">View, filter, and manage all your financial records.</p>
       
-      {/* --- Filter controls (No changes here) --- */}
+      {/* --- Filter controls  --- */}
       <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-white p-4 rounded-lg shadow-md">
         <input 
           type="text"
@@ -204,7 +203,7 @@ const TransactionsPage = () => {
         </table>
       </div>
 
-      {/* --- Modal and Floating Button (No changes here) --- */}
+      {/* --- Modal and Floating Button  --- */}
       <button 
         onClick={openAddModal}
         className="fixed bottom-8 right-8 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-transform duration-200 hover:scale-110"

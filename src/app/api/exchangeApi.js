@@ -1,4 +1,3 @@
-// src/app/api/exchangeApi.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const API_KEY = import.meta.env.VITE_EXCHANGE_RATE_API_KEY;

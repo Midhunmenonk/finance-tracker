@@ -1,4 +1,3 @@
-// src/components/dashboard/BudgetProgress.jsx
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useCurrencyConverter } from '../../hooks/useCurrencyConverter';

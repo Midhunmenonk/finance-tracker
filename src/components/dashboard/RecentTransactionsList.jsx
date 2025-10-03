@@ -1,9 +1,7 @@
-// src/components/dashboard/RecentTransactionsList.jsx
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteTransaction } from '../../features/transactions/transactionsSlice';
 import { useCurrencyConverter } from '../../hooks/useCurrencyConverter';
-// 1. FiEdit2 icon removed from imports
 import { FiTrash2, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 
 const RecentTransactionsList = () => {

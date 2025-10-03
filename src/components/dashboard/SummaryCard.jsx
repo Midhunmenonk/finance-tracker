@@ -1,4 +1,3 @@
-// src/components/dashboard/SummaryCard.jsx
 import React from 'react';
 
 const SummaryCard = ({ title, amount, icon, color, baseCurrency = 'USD' }) => {

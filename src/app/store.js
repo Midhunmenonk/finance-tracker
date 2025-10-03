@@ -1,8 +1,7 @@
-// src/app/store.js
 import { configureStore } from '@reduxjs/toolkit';
 import transactionsReducer from '../features/transactions/transactionsSlice';
 import budgetReducer from '../features/budgets/budgetSlice';
-import settingsReducer from '../features/settings/settingsSlice'; // Import
+import settingsReducer from '../features/settings/settingsSlice'; 
 import { exchangeApi } from './api/exchangeApi';
 
 export const store = configureStore({

@@ -1,4 +1,3 @@
-// src/components/dashboard/ExpenseBreakdown.jsx
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';

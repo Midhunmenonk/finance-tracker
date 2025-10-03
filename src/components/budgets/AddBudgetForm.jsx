@@ -1,9 +1,7 @@
-// src/components/budgets/AddBudgetForm.jsx
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setBudgetGoal } from '../../features/budgets/budgetSlice';
 
-// ✅ Define a master list of potential expense categories
 const expenseCategories = ['Food', 'Housing', 'Entertainment', 'Transportation', 'Utilities', 'Other'];
 
 const AddBudgetForm = ({ onClose }) => {
@@ -19,7 +17,7 @@ const AddBudgetForm = ({ onClose }) => {
       return;
     }
     dispatch(setBudgetGoal({ category, goal: parseFloat(goalAmount) }));
-    onClose(); // Close the modal after submitting
+    onClose(); 
   };
 
   return (

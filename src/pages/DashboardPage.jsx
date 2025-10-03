@@ -1,6 +1,5 @@
-// src/pages/DashboardPage.jsx
 import React from 'react';
-import { useSelector } from 'react-redux'; // ✅ Correct import source
+import { useSelector } from 'react-redux'; 
 import { useGetLatestRatesQuery } from '../app/api/exchangeApi';
 import SummaryCard from '../components/dashboard/SummaryCard';
 import ExpenseBreakdown from '../components/dashboard/ExpenseBreakdown';

@@ -1,20 +1,17 @@
-// src/components/dashboard/AddTransactionForm.jsx
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { addTransaction, updateTransaction } from '../../features/transactions/transactionsSlice';
-// Assuming you have a list of categories
 const categories = ['Food', 'Housing', 'Entertainment', 'Transportation', 'Salary', 'Utilities', 'Other'];
-const currencies = ['USD', 'EUR', 'GBP', 'INR']; // Example currencies
+const currencies = ['USD', 'EUR', 'GBP', 'INR']; 
 
 const AddTransactionForm = ({ initialData = null, closeModal, onSubmit }) => {
   const dispatch = useDispatch();
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
-  const [type, setType] = useState('expense'); // Default to expense
+  const [type, setType] = useState('expense'); 
   const [category, setCategory] = useState('');
-  const [currency, setCurrency] = useState('USD'); // Default currency
+  const [currency, setCurrency] = useState('USD'); 
 
-  // Populate form if editing
   useEffect(() => {
     if (initialData) {
       setDescription(initialData.description || '');
@@ -44,21 +41,21 @@ const AddTransactionForm = ({ initialData = null, closeModal, onSubmit }) => {
       type,
       category,
       currency,
-      date: initialData?.date || new Date().toISOString().split('T')[0], // Use existing date if editing
-      id: initialData?.id, // For update
+      date: initialData?.date || new Date().toISOString().split('T')[0], 
+      id: initialData?.id, 
     };
 
     if (initialData) {
-      // Edit mode
+      
       dispatch(updateTransaction(transactionData));
       if (onSubmit) onSubmit(transactionData);
     } else {
-      // Add mode
+      
       dispatch(addTransaction(transactionData));
       if (onSubmit) onSubmit(transactionData);
     }
 
-    // Clear form and close modal if provided
+    
     setDescription('');
     setAmount('');
     setCategory('');

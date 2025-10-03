@@ -1,4 +1,3 @@
-// src/features/budgets/budgetSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -22,7 +21,6 @@ const budgetSlice = createSlice({
         state.goals.push({ category, goal });
       }
     },
-    // ✅ ADD THIS NEW REDUCER
     deleteBudgetGoal: (state, action) => {
       // The payload will be the category name to delete
       state.goals = state.goals.filter(goal => goal.category !== action.payload);
@@ -30,6 +28,5 @@ const budgetSlice = createSlice({
   },
 });
 
-// ✅ EXPORT THE NEW ACTION
 export const { setBudgetGoal, deleteBudgetGoal } = budgetSlice.actions;
 export default budgetSlice.reducer;

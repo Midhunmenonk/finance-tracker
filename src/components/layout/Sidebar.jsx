@@ -1,4 +1,3 @@
-// src/components/layout/Sidebar.jsx
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { FiGrid, FiList, FiTarget } from 'react-icons/fi';
@@ -9,7 +8,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
   // Function to close sidebar on link click (for mobile view)
   const handleLinkClick = () => {
-    if (window.innerWidth < 768) { // md breakpoint is 768px
+    if (window.innerWidth < 768) { 
       setIsOpen(false);
     }
   };

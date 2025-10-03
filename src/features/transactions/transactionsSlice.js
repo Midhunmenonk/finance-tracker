@@ -1,9 +1,7 @@
-// src/features/transactions/transactionsSlice.js
 import { createSlice, nanoid } from '@reduxjs/toolkit';
 
 const initialState = {
   items: [
-    // ✅ Add the 'currency' property to all initial transactions
     { id: 1, description: 'Salary', amount: 5000, type: 'income', category: 'Salary', date: '2025-10-01', currency: 'USD' },
     { id: 2, description: 'Rent', amount: 1250, type: 'expense', category: 'Housing', date: '2025-10-01', currency: 'USD' },
     { id: 3, description: 'Groceries', amount: 300, type: 'expense', category: 'Food', date: '2025-10-02', currency: 'USD' },

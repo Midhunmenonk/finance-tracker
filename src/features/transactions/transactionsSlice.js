@@ -19,7 +19,7 @@ const transactionsSlice = createSlice({
       state.items.push({ id: nanoid(), ...action.payload });
     },
     deleteTransaction: (state, action) => {
-      state.items = state.items.filter(item => item.id !== action.payload.id);
+      state.items = state.items.filter(item => item.id !== action.payload);
     },
     updateTransaction: (state, action) => {
       const index = state.items.findIndex(item => item.id === action.payload.id);
